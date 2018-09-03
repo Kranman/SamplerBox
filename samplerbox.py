@@ -31,6 +31,7 @@ import wave
 import time
 import numpy
 import os
+import sys, termios, tty, time
 import re
 import sounddevice
 import threading
@@ -174,6 +175,70 @@ globaltranspose = 0
 #
 #########################################
 
+def getch():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    try:
+        tty.setraw(sys.stdin.fileno())
+        ch = sys.stdin.read(1)
+ 
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+    return ch
+ 
+button_delay = 0.2
+ 
+while True:
+    char = getch()
+ 
+    if (char == "1"):
+        if preset < 10:
+            preset += 0
+        else:
+            preset = 0
+        print 'Program change [%d]' % preset
+        LoadSamples()
+        
+    elif (char == "2"):
+        if preset < 10:
+            preset = 1
+        else:
+            preset = 0
+        print 'Program change [%d]' % preset
+        LoadSamples()
+        
+    elif (char == "3"):
+        if preset < 10:
+            preset = 2
+        else:
+            preset = 0
+        print 'Program change [%d]' % preset
+        LoadSamples()
+        
+    elif (char == "4"):
+        if preset < 10:
+            preset = 3
+        else:
+            preset = 0
+        print 'Program change [%d]' % preset
+        LoadSamples()
+        
+    elif (char == "5"):
+        if preset < 10:
+            preset = 4
+        else:
+            preset = 0
+        print 'Program change [%d]' % preset
+        LoadSamples()
+        
+    elif (char == "6"):
+        if preset < 10:
+            preset += 1
+        else:
+            preset = 0
+        print 'Program change [%d]' % preset
+        LoadSamples()
+        
 def AudioCallback(outdata, frame_count, time_info, status):
     global playingsounds
     rmlist = []
