@@ -175,70 +175,7 @@ globaltranspose = 0
 #
 #########################################
 
-def getch():
-    fd = sys.stdin.fileno()
-    old_settings = termios.tcgetattr(fd)
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
- 
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return ch
- 
-button_delay = 0.2
- 
-while True:
-    char = getch()
- 
-    if (char == "1"):
-        if preset < 10:
-            preset += 0
-        else:
-            preset = 0
-        print 'Program change [%d]' % preset
-        LoadSamples()
-        
-    elif (char == "2"):
-        if preset < 10:
-            preset = 1
-        else:
-            preset = 0
-        print 'Program change [%d]' % preset
-        LoadSamples()
-        
-    elif (char == "3"):
-        if preset < 10:
-            preset = 2
-        else:
-            preset = 0
-        print 'Program change [%d]' % preset
-        LoadSamples()
-        
-    elif (char == "4"):
-        if preset < 10:
-            preset = 3
-        else:
-            preset = 0
-        print 'Program change [%d]' % preset
-        LoadSamples()
-        
-    elif (char == "5"):
-        if preset < 10:
-            preset = 4
-        else:
-            preset = 0
-        print 'Program change [%d]' % preset
-        LoadSamples()
-        
-    elif (char == "6"):
-        if preset < 10:
-            preset += 1
-        else:
-            preset = 0
-        print 'Program change [%d]' % preset
-        LoadSamples()
-        
+
 def AudioCallback(outdata, frame_count, time_info, status):
     global playingsounds
     rmlist = []
@@ -285,7 +222,15 @@ def MidiCallback(message, time_stamp):
         print 'Program change ' + str(note)
         preset = note
         LoadSamples()
-
+        
+    elif (messagetype == 9) and (note == 108):  # LPK25 sustain button pushed
+        if preset < 10:
+            preset += 1
+        else:
+            preset = 0
+        print 'Program change [%d]' % preset
+        LoadSamples()
+        
     elif (messagetype == 11) and (note == 64) and (velocity < 64):  # sustain pedal off
         for n in sustainplayingnotes:
             n.fadeout(50)
@@ -295,7 +240,7 @@ def MidiCallback(message, time_stamp):
     elif (messagetype == 11) and (note == 64) and (velocity >= 64):  # sustain pedal on
         sustain = True
 
-
+            
 #########################################
 # LOAD SAMPLES
 #
