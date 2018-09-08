@@ -223,7 +223,7 @@ def MidiCallback(message, time_stamp):
         preset = note
         LoadSamples()
         
-    elif (messagetype == 9) and (note == 108):  # LPK25 sustain button pushed
+    elif (messagetype == 9) and (note == 108):  # C8 is pressed
         if preset < 10:
             preset += 1
         else:
